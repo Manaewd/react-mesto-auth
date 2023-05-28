@@ -11,6 +11,10 @@
     line-height: 22px;
 }
 
+.header__link:hover {
+    opacity: .6;
+  }
+
 @media screen and (max-width: 1024px) {
     .header__link {
         padding: 2px 31px 0 0;

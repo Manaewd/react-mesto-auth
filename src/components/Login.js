@@ -1,26 +1,6 @@
 import React, { useState } from "react";
 
 function Login({ onLogin }) {
-  // const [loginData, setLoginData] = useState({
-  //   email: "",
-  //   password: "",
-  // });
-
-  // const handleChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setLoginData({
-  //     ...loginData,
-  //     [name]: value,
-  //   });
-  // };
-
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-
-  //   onLogin(loginData).catch((err) => {
-  //     console.log(`Ошибка: ${err}`);
-  //   });
-  // };
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -43,7 +23,7 @@ function Login({ onLogin }) {
       <form className="auth__form" onSubmit={handleSubmit}>
       <h1 className="auth__title">Вход</h1>
         <input
-          id="email"
+          // id="email"
           onChange={handleEmailChange}
           type="email"
           name="email"
@@ -54,7 +34,7 @@ function Login({ onLogin }) {
           value={email || ""}
         ></input>
         <input
-          id="password"
+          // id="password"
           onChange={handlePasswordChange}
           autoComplete="new-password"
           required

@@ -8,6 +8,10 @@
     cursor: pointer;
 }
 
+.auth__button:hover {
+  opacity: .6;
+}
+
 @media screen and (max-width: 799px) {
     .auth__button {
       width: 260px;

@@ -8,6 +8,11 @@
     background-image: url(../../../images/header-menu.svg);
     background-repeat: no-repeat;
     background-color: transparent;
+    border: none;
+}
+
+.header__menu-open:hover {
+    opacity: .6;
 }
 
 @media screen and (min-width: 1280px) {

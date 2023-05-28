@@ -14,10 +14,10 @@ function Header({ onLogOut, emailHeader, isOpen, menuOpen }) {
                 isOpen ? "header__nav_mob-active" : "header__nav-mob"
               }`}
             >
-              <p className="header__email_mobile">{emailHeader}</p>
+              <p className="header__email">{emailHeader}</p>
               <Link
                 to="sign-in"
-                className="header__exit_mobile"
+                className="header__exit"
                 onClick={onLogOut}
               >
                 Выйти
@@ -36,13 +36,12 @@ function Header({ onLogOut, emailHeader, isOpen, menuOpen }) {
                 <button
                   className={`${
                     isOpen
-                      ? "header__menu-button_type_closed"
-                      : "header__menu-button_type_opened"
+                      ? "header__menu-closed"
+                      : "header__menu-open"
                   }`}
                   type="button"
                   onClick={menuOpen}
                 />
-
                 <nav className="header__nav">
                   <p className="header__email">{emailHeader}</p>
                   <Link
