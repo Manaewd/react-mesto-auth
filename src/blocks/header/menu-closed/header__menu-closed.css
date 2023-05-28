@@ -12,3 +12,7 @@
     background-color: transparent;
     background-repeat: no-repeat;
 }
+
+.header__menu-closed:hover {
+    opacity: .6;
+}

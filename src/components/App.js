@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
-import { Routes, Route, useNavigate } from "react-router-dom";
-import { Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import api from "../utils/Api";
 import auth from "../utils/Auth";
@@ -47,6 +47,68 @@ function App() {
         .catch((err) => console.log(err));
     }
   }, [loggedIn]);
+
+  function handleRegister({ email, password }) {
+    auth
+      .register({ email, password })
+      .then(() => {
+        setRegSuccess(true);
+        navigate("/sign-in");
+      })
+      .catch((err) => {
+        setRegSuccess(false);
+        console.log(`Ошибка: ${err}`);
+      })
+      .finally(() => setIsInfoTooltipOpen(true));
+  }
+  
+
+  function handleLogin({ email, password }) {
+    auth
+      .login({ email, password })
+      .then((data) => {
+        localStorage.setItem("token", data.token);
+        setLoggedIn(true);
+        setEmailHeader(email);
+        navigate("/");
+      })
+      .catch((err) => {
+        setRegSuccess(false);
+        setIsInfoTooltipOpen(true)
+        console.log(err);
+      });
+  }
+
+  function handleTokenCheck() {
+    const token = localStorage.getItem("token");
+    if (token) {
+      auth
+        .checkToken(token)
+        .then((user) => {
+          setLoggedIn(true);
+          setEmailHeader(user.data.email);
+          navigate("/");
+        })
+        .catch((err) => {
+          console.log(`Ошибка: ${err}`);
+        });
+    }
+  }
+
+  useEffect(() => {
+    handleTokenCheck();
+  }, []);
+
+  function handleLogout() {
+    setLoggedIn(false);
+    localStorage.removeItem("token");
+    navigate("/sign-in");
+  }
+
+  function handleClickMenuOpen() {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  }
+
 
   const handleEditProfileClick = () => {
     setIsEditProfilePopupOpen(true);
@@ -125,67 +187,6 @@ function App() {
       .catch((err) => console.log(err));
   }
 
-  function handleRegister({ email, password }) {
-    auth
-      .register({ email, password })
-      .then(() => {
-        setRegSuccess(true);
-        navigate("/sign-in");
-      })
-      .catch((err) => {
-        setRegSuccess(false);
-        console.log(`Ошибка: ${err}`);
-      })
-      .finally(() => setIsInfoTooltipOpen(true));
-  }
-  
-
-  function handleLogin({ email, password }) {
-    auth
-      .login({ email, password })
-      .then((res) => {
-        localStorage.setItem("jwt", res.token);
-        setLoggedIn(true);
-        setEmailHeader(res.email);
-        navigate("/");
-      })
-      .catch((err) => {
-        console.log(err);
-        setRegSuccess(false);
-        setIsInfoTooltipOpen(true)
-      });
-  }
-
-  function handleTokenCheck() {
-    const jwt = localStorage.getItem("jwt");
-    if (jwt) {
-      auth
-        .checkToken(jwt)
-        .then((res) => {
-          setLoggedIn(true);
-          setEmailHeader(res.data.email);
-          navigate("/");
-        })
-        .catch((err) => {
-          console.log(`Ошибка: ${err}`);
-        });
-    }
-  }
-
-  useEffect(() => {
-    handleTokenCheck();
-  }, []);
-
-  function handleLogout() {
-    localStorage.removeItem("jwt");
-    setLoggedIn(false);
-    navigate("/sign-in");
-  }
-
-  function handleClickMenuOpen() {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  }
-
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
@@ -201,7 +202,6 @@ function App() {
             element={
               <ProtectedRoute
                 component={Main}
-                loggedIn={loggedIn}
                 onEditProfile={handleEditProfileClick}
                 onAddPlace={handleAddPlaceClick}
                 onEditAvatar={handleEditAvatarClick}
@@ -209,31 +209,14 @@ function App() {
                 cards={cards}
                 onCardLike={handleCardLike}
                 onCardDelete={handleCardDelete}
+                loggedIn={loggedIn}
               />
             }
           />
-          <Route
-            path="/sign-up"
-            element={<Register onRegister={handleRegister} />}
-          />
-          <Route path="/sign-in" element={<Login onLogin={handleLogin} />} />
-          
-          <Route
-            path="/"
-            element={
-              loggedIn ? <Navigate to="/" /> : <Navigate to="/sign-in" />
-            }
-          />
-          <Route
-            path="*"
-            element={
-              !loggedIn ? (
-                <Navigate to="/sign-up" />
-              ) : (
-                <Navigate to="/sign-in" />
-              )
-            }
-          />
+          <Route path="/sign-up" element={<Register onRegister={handleRegister} /> } />
+          <Route path="/sign-in" element={<Login onLogin={handleLogin} /> } />
+          <Route path="/" element={ loggedIn ? <Navigate to="/" /> : <Navigate to="/sign-in" /> } />
+          <Route path="*" element={ !loggedIn ? ( <Navigate to="/sign-up" /> ) : ( <Navigate to="/sign-in" /> ) } />
         </Routes>
 
         <Footer />
